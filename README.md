@@ -147,7 +147,7 @@ From these above models after hyperparameter optimization we selected Top two mo
 
 
 ## Conclusion
-- This Project can be used in real-life by US Visa applicant so that they can improve their resume and criteria for the approval process
-- Can be implemented in Visa application website for users.
+
+- It helps to save the resources and also helps to gain more profit from the business based on the study.
 
 =====================================================================

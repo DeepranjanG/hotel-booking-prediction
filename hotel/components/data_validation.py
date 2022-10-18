@@ -66,7 +66,7 @@ class DataValidation:
                 if column not in dataframe_columns:
                     status = False
                     missing_categorical_columns.append(column)
-            logging.info(f"Missing numerical column: {missing_categorical_columns}")
+            logging.info(f"Missing categorical column: {missing_categorical_columns}")
 
             return status
         except Exception as e:
@@ -142,9 +142,10 @@ class DataValidation:
 
             validation_status = len(validation_error_msg) == 0
             if validation_status:
-                drift_status = self.detect_dataset_drift(train_df, test_df)
-                if drift_status:
-                    logging.info(f"Drift detected.")
+                ...
+                # drift_status = self.detect_dataset_drift(train_df, test_df)
+                # if drift_status:
+                #     logging.info(f"Drift detected.")
             else:
                 logging.info(f"Validation_error: {validation_error_msg}")
             data_validation_artifact = DataValidationArtifact(

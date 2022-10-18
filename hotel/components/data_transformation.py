@@ -9,6 +9,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder, PowerTransformer
 from sklearn.compose import ColumnTransformer
+from category_encoders.binary import BinaryEncoder
 
 from hotel.constant.training_pipeline import TARGET_COLUMN, SCHEMA_FILE_PATH, CURRENT_YEAR
 from hotel.entity.config_entity import DataTransformationConfig
@@ -18,6 +19,7 @@ from hotel.logger import logging
 from hotel.utils.main_utils import save_object, save_numpy_array_data, read_yaml_file, drop_columns
 from sklearn.pipeline import Pipeline
 from hotel.entity.estimator import TargetValueMapping
+from hotel.ml.feature import CutsomFeatureHandler
 
 class DataTransformation:
     def __init__(self, data_ingestion_artifact: DataIngestionArtifact,
@@ -56,27 +58,33 @@ class DataTransformation:
         try:
             logging.info("Got numerical cols from schema config")
 
+            custom_feature_handler = CutsomFeatureHandler()
+
             numeric_transformer = StandardScaler()
             oh_transformer = OneHotEncoder()
+            bin_encoder = BinaryEncoder()
             ordinal_encoder = OrdinalEncoder()
 
             logging.info("Initialized StandardScaler, OneHotEncoder, OrdinalEncoder")
 
             oh_columns = self._schema_config['oh_columns']
-            or_columns = self._schema_config['or_columns']
-            transform_columns = self._schema_config['transform_columns']
+            bin_columns = self._schema_config['bin_columns']
             num_features = self._schema_config['num_features']
+            ordinal_features = self._schema_config["ordinal_columns"]
+            custom_features = self._schema_config["custom_features_columns"]
 
             logging.info("Initialize PowerTransformer")
+            Pipeline(steps=[
+                ("CustomFeatureHandler", custom_feature_handler),
 
-            transform_pipe = Pipeline(steps=[
-                ('transformer', PowerTransformer(method='yeo-johnson'))
+
             ])
             preprocessor = ColumnTransformer(
                 [
+                    ("CustomFeatureHandler",custom_feature_handler , custom_features),
+                    ("OrdinalEncoder", ordinal_encoder, ordinal_features),
                     ("OneHotEncoder", oh_transformer, oh_columns),
-                    ("Ordinal_Encoder", ordinal_encoder, or_columns),
-                    ("Transformer", transform_pipe, transform_columns),
+                    ("Binary_Encoder", bin_encoder, bin_columns),
                     ("StandardScaler", numeric_transformer, num_features)
                 ]
             )
@@ -112,10 +120,6 @@ class DataTransformation:
 
             logging.info("Got train features and test features of Training dataset")
 
-            input_feature_train_df['company_age'] = CURRENT_YEAR-input_feature_train_df['yr_of_estab']
-
-            logging.info("Added company_age column to the Training dataset")
-
             drop_cols = self._schema_config['drop_columns']
 
             logging.info("drop the columns in drop_cols of Training dataset")
@@ -132,10 +136,6 @@ class DataTransformation:
             target_feature_test_df = test_df[TARGET_COLUMN]
 
 
-            input_feature_test_df['company_age'] = CURRENT_YEAR-input_feature_test_df['yr_of_estab']
-
-            logging.info("Added company_age column to the Test dataset")
-
             input_feature_test_df = drop_columns(df=input_feature_test_df, cols = drop_cols)
 
             logging.info("drop the columns in drop_cols of Test dataset")
@@ -149,14 +149,16 @@ class DataTransformation:
             logging.info(
                 "Applying preprocessing object on training dataframe and testing dataframe"
             )
+            preprocessor_obj = preprocessor.fit(input_feature_train_df)
+            input_feature_train_arr = preprocessor_obj.transform(input_feature_train_df)
 
-            input_feature_train_arr = preprocessor.fit_transform(input_feature_train_df)
+            print(input_feature_train_arr)
 
             logging.info(
                 "Used the preprocessor object to fit transform the train features"
             )
 
-            input_feature_test_arr = preprocessor.transform(input_feature_test_df)
+            input_feature_test_arr = preprocessor_obj.transform(input_feature_test_df)
 
             logging.info("Used the preprocessor object to transform the test features")
 

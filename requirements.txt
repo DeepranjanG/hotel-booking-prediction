@@ -20,6 +20,7 @@ xgboost==1.6.2
 neuro-mf==0.0.5
 Jinja2
 python-multipart
+category-encoders==2.5.1
 
 
 -e .
