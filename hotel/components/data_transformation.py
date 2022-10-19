@@ -7,7 +7,7 @@ from imblearn.combine import SMOTEENN
 from pandas import DataFrame
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder, PowerTransformer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder
 from sklearn.compose import ColumnTransformer
 from category_encoders.binary import BinaryEncoder
 
@@ -60,10 +60,6 @@ class DataTransformation:
 
             custom_feature_handler = CutsomFeatureHandler()
 
-            numeric_transformer = StandardScaler()
-            oh_transformer = OneHotEncoder()
-            bin_encoder = BinaryEncoder()
-            ordinal_encoder = OrdinalEncoder()
 
             logging.info("Initialized StandardScaler, OneHotEncoder, OrdinalEncoder")
 
@@ -74,18 +70,36 @@ class DataTransformation:
             custom_features = self._schema_config["custom_features_columns"]
 
             logging.info("Initialize PowerTransformer")
-            Pipeline(steps=[
-                ("CustomFeatureHandler", custom_feature_handler),
-
-
+            custom_feature_handler = Pipeline(steps=[
+                ("CustomFeatureHandler", custom_feature_handler)
             ])
+
+            ordinal_encoder = Pipeline(steps=[
+                ("OrdinalEncoder", OrdinalEncoder()),
+                ('scaler', StandardScaler(with_mean=False))
+            ])
+
+            oh_transformer = Pipeline(steps=[
+                ("OneHotEncoder", OneHotEncoder()),
+                ('scaler', StandardScaler(with_mean=False))
+            ])
+
+            bin_encoder = Pipeline(steps=[
+                ("Binary_Encoder", BinaryEncoder()),
+                ('scaler', StandardScaler(with_mean=False))
+            ])
+
+            num_encoder = Pipeline(steps=[
+                ('scaler', StandardScaler(with_mean=False))
+            ])
+
             preprocessor = ColumnTransformer(
                 [
                     ("CustomFeatureHandler",custom_feature_handler , custom_features),
                     ("OrdinalEncoder", ordinal_encoder, ordinal_features),
                     ("OneHotEncoder", oh_transformer, oh_columns),
                     ("Binary_Encoder", bin_encoder, bin_columns),
-                    ("StandardScaler", numeric_transformer, num_features)
+                    ("Numerical_Encoder", num_encoder, num_features)
                 ]
             )
 
@@ -149,45 +163,25 @@ class DataTransformation:
             logging.info(
                 "Applying preprocessing object on training dataframe and testing dataframe"
             )
-            preprocessor_obj = preprocessor.fit(input_feature_train_df)
-            input_feature_train_arr = preprocessor_obj.transform(input_feature_train_df)
+            input_feature_train_arr = preprocessor.fit_transform(input_feature_train_df)
 
-            print(input_feature_train_arr)
 
             logging.info(
                 "Used the preprocessor object to fit transform the train features"
             )
 
-            input_feature_test_arr = preprocessor_obj.transform(input_feature_test_df)
+            input_feature_test_arr = preprocessor.transform(input_feature_test_df)
 
             logging.info("Used the preprocessor object to transform the test features")
-
-            logging.info("Applying SMOTEENN on Training dataset")
-
-            smt = SMOTEENN(sampling_strategy="minority")
-
-            input_feature_train_final, target_feature_train_final = smt.fit_resample(
-                input_feature_train_arr, target_feature_train_df
-            )
-
-            logging.info("Applied SMOTEENN on training dataset")
-
-            logging.info("Applying SMOTEENN on testing dataset")
-
-            input_feature_test_final, target_feature_test_final = smt.fit_resample(
-                input_feature_test_arr, target_feature_test_df
-            )
-
-            logging.info("Applied SMOTEENN on testing dataset")
 
             logging.info("Created train array and test array")
 
             train_arr = np.c_[
-                input_feature_train_final, np.array(target_feature_train_final)
+                input_feature_train_arr, np.array(target_feature_train_df)
             ]
 
             test_arr = np.c_[
-                input_feature_test_final, np.array(target_feature_test_final)
+                input_feature_test_arr, np.array(target_feature_test_df)
             ]
 
             save_object(self.data_transformation_config.transformed_object_file_path, preprocessor)

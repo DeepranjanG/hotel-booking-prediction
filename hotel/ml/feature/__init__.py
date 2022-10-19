@@ -48,7 +48,7 @@ class CutsomFeatureHandler(BaseEstimator, TransformerMixin):
                 sc = StandardScaler()
                 self.standard_scaler =  sc.fit( x[["total_guest"]])
             x["total_guest"]  =self.standard_scaler.transform( x[["total_guest"]])
-            print(x.head())
+
             return x
 
         except Exception as e:
