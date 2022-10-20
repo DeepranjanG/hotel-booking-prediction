@@ -19,7 +19,7 @@ from hotel.logger import logging
 from hotel.utils.main_utils import save_object, save_numpy_array_data, read_yaml_file, drop_columns
 from sklearn.pipeline import Pipeline
 from hotel.entity.estimator import TargetValueMapping
-from hotel.ml.feature import CutsomFeatureHandler
+
 
 class DataTransformation:
     def __init__(self, data_ingestion_artifact: DataIngestionArtifact,
@@ -58,8 +58,6 @@ class DataTransformation:
         try:
             logging.info("Got numerical cols from schema config")
 
-            custom_feature_handler = CutsomFeatureHandler()
-
 
             logging.info("Initialized StandardScaler, OneHotEncoder, OrdinalEncoder")
 
@@ -70,9 +68,9 @@ class DataTransformation:
             custom_features = self._schema_config["custom_features_columns"]
 
             logging.info("Initialize PowerTransformer")
-            custom_feature_handler = Pipeline(steps=[
-                ("CustomFeatureHandler", custom_feature_handler)
-            ])
+            # custom_feature_handler = Pipeline(steps=[
+            #     ("CustomFeatureHandler", custom_feature_handler)
+            # ])
 
             ordinal_encoder = Pipeline(steps=[
                 ("OrdinalEncoder", OrdinalEncoder()),
@@ -80,8 +78,7 @@ class DataTransformation:
             ])
 
             oh_transformer = Pipeline(steps=[
-                ("OneHotEncoder", OneHotEncoder()),
-                ('scaler', StandardScaler(with_mean=False))
+                ("OneHotEncoder", OneHotEncoder())
             ])
 
             bin_encoder = Pipeline(steps=[
@@ -90,12 +87,12 @@ class DataTransformation:
             ])
 
             num_encoder = Pipeline(steps=[
-                ('scaler', StandardScaler(with_mean=False))
+                ('scaler', StandardScaler())
             ])
 
             preprocessor = ColumnTransformer(
                 [
-                    ("CustomFeatureHandler",custom_feature_handler , custom_features),
+                    # ("CustomFeatureHandler",custom_feature_handler , custom_features),
                     ("OrdinalEncoder", ordinal_encoder, ordinal_features),
                     ("OneHotEncoder", oh_transformer, oh_columns),
                     ("Binary_Encoder", bin_encoder, bin_columns),
@@ -139,6 +136,7 @@ class DataTransformation:
             logging.info("drop the columns in drop_cols of Training dataset")
 
             input_feature_train_df = drop_columns(df=input_feature_train_df, cols = drop_cols)
+
             
             target_feature_train_df = target_feature_train_df.replace(
                 TargetValueMapping()._asdict()
@@ -163,7 +161,10 @@ class DataTransformation:
             logging.info(
                 "Applying preprocessing object on training dataframe and testing dataframe"
             )
+
             input_feature_train_arr = preprocessor.fit_transform(input_feature_train_df)
+
+            print(input_feature_train_arr)
 
 
             logging.info(

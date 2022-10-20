@@ -16,6 +16,7 @@ from typing import List
 import os
 
 from hotel.logger import logging
+from hotel.ml.feature import basic_preprocessing
 class DataIngestion:
     def __init__(self,data_ingestion_config:DataIngestionConfig=DataIngestionConfig()):
         """
@@ -49,6 +50,20 @@ class DataIngestion:
 
         except Exception as e:
             raise HotelException(e,sys)
+
+    def basic_preprocessing_steps(self, dataframe: DataFrame) -> None:
+
+        try:
+            logging.info("Basic preprocessing steps")
+
+            dataframe = basic_preprocessing(dataframe)
+
+            return dataframe
+
+        except Exception as e:
+            raise HotelException(e, sys)
+
+
 
     def split_data_as_train_test(self,dataframe: DataFrame) ->None:
         """
@@ -91,6 +106,10 @@ class DataIngestion:
             dataframe = self.export_data_into_feature_store()
 
             logging.info("Got the data from mongodb")
+
+            dataframe = self.basic_preprocessing_steps(dataframe)
+
+            logging.info("Performed basic preprocessing")
 
             self.split_data_as_train_test(dataframe)
 
