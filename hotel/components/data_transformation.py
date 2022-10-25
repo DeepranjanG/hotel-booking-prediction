@@ -11,7 +11,7 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder
 from sklearn.compose import ColumnTransformer
 from category_encoders.binary import BinaryEncoder
 
-from hotel.constant.training_pipeline import TARGET_COLUMN, SCHEMA_FILE_PATH, CURRENT_YEAR
+from hotel.constant.training_pipeline import TARGET_COLUMN, SCHEMA_FILE_PATH, MODEL_FILE_PATH
 from hotel.entity.config_entity import DataTransformationConfig
 from hotel.entity.artifact_entity import DataTransformationArtifact, DataIngestionArtifact
 from hotel.exception import HotelException
@@ -32,6 +32,7 @@ class DataTransformation:
             self.data_ingestion_artifact = data_ingestion_artifact
             self.data_transformation_config = data_transformation_config
             self._schema_config = read_yaml_file(file_path=SCHEMA_FILE_PATH)
+
         except Exception as e:
             raise HotelException(e, sys)
 
@@ -65,12 +66,9 @@ class DataTransformation:
             bin_columns = self._schema_config['bin_columns']
             num_features = self._schema_config['num_features']
             ordinal_features = self._schema_config["ordinal_columns"]
-            custom_features = self._schema_config["custom_features_columns"]
 
             logging.info("Initialize PowerTransformer")
-            # custom_feature_handler = Pipeline(steps=[
-            #     ("CustomFeatureHandler", custom_feature_handler)
-            # ])
+
 
             ordinal_encoder = Pipeline(steps=[
                 ("OrdinalEncoder", OrdinalEncoder()),
@@ -92,7 +90,6 @@ class DataTransformation:
 
             preprocessor = ColumnTransformer(
                 [
-                    # ("CustomFeatureHandler",custom_feature_handler , custom_features),
                     ("OrdinalEncoder", ordinal_encoder, ordinal_features),
                     ("OneHotEncoder", oh_transformer, oh_columns),
                     ("Binary_Encoder", bin_encoder, bin_columns),
@@ -164,7 +161,6 @@ class DataTransformation:
 
             input_feature_train_arr = preprocessor.fit_transform(input_feature_train_df)
 
-            print(input_feature_train_arr)
 
 
             logging.info(

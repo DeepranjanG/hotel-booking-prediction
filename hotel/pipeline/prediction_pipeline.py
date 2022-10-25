@@ -16,32 +16,50 @@ from pandas import DataFrame
 
 class HotelData:
     def __init__(self,
-                continent,
-                education_of_employee,
-                has_job_experience,
-                requires_job_training,
-                no_of_employees,
-                region_of_employment,
-                prevailing_wage,
-                unit_of_wage,
-                full_time_position,
-                company_age
+                 hotel,
+                 lead_time,
+                 arrival_date_year,
+                 arrival_date_month,
+                 arrival_date_day_of_month,
+                 stays_in_weekend_nights,
+                 stays_in_week_nights,
+                 meal,
+                 country,
+                 market_segment,
+                 distribution_channel,
+                 previous_cancellations,
+                 reserved_room_type,
+                 booking_changes,
+                 deposit_type,
+                 customer_type,
+                 adr,
+                 total_of_special_requests,
+                 total_guest
                 ):
         """
         Hotel Data constructor
         Input: all features of the trained model for prediction
         """
         try:
-            self.continent = continent
-            self.education_of_employee = education_of_employee
-            self.has_job_experience = has_job_experience
-            self.requires_job_training = requires_job_training
-            self.no_of_employees = no_of_employees
-            self.region_of_employment = region_of_employment
-            self.prevailing_wage = prevailing_wage
-            self.unit_of_wage = unit_of_wage
-            self.full_time_position = full_time_position
-            self.company_age = company_age
+            self.hotel = hotel
+            self.lead_time = lead_time
+            self.arrival_date_year = arrival_date_year
+            self.arrival_date_month = arrival_date_month
+            self.arrival_date_day_of_month = arrival_date_day_of_month
+            self.stays_in_weekend_nights = stays_in_weekend_nights
+            self.stays_in_week_nights = stays_in_week_nights
+            self.meal = meal
+            self.country = country
+            self.market_segment = market_segment
+            self.distribution_channel = distribution_channel
+            self.previous_cancellations = previous_cancellations
+            self.reserved_room_type = reserved_room_type
+            self.booking_changes = booking_changes
+            self.deposit_type = deposit_type
+            self.customer_type = customer_type
+            self.adr= adr
+            self.total_of_special_requests = total_of_special_requests
+            self.total_guest = total_guest
 
 
         except Exception as e:
@@ -67,18 +85,27 @@ class HotelData:
         logging.info("Entered get_hotel_data_as_dict method as HotelData class")
 
         try:
-            input_data = {
-                "continent": [self.continent],
-                "education_of_employee": [self.education_of_employee],
-                "has_job_experience": [self.has_job_experience],
-                "requires_job_training": [self.requires_job_training],
-                "no_of_employees": [self.no_of_employees],
-                "region_of_employment": [self.region_of_employment],
-                "prevailing_wage": [self.prevailing_wage],
-                "unit_of_wage": [self.unit_of_wage],
-                "full_time_position": [self.full_time_position],
-                "company_age": [self.company_age],
-            }
+            input_data =  {
+                "hotel": [self.hotel],
+                "lead_time":[self.lead_time],
+                "arrival_date_year":[self.arrival_date_year],
+                "arrival_date_month":[self.arrival_date_month],
+                "arrival_date_day_of_month":[self.arrival_date_day_of_month],
+                "stays_in_weekend_nights":[self.stays_in_weekend_nights],
+                "stays_in_week_nights":[self.stays_in_week_nights],
+                "meal":[self.meal],
+                "country":[self.country],
+                "market_segment":[self.market_segment],
+                "distribution_channel":[self.distribution_channel],
+                "previous_cancellations":[self.previous_cancellations],
+                "reserved_room_type":[self.reserved_room_type],
+                "booking_changes":[self.booking_changes],
+                "deposit_type":[self.deposit_type],
+                "customer_type":[self.customer_type],
+                "adr":[self.adr],
+                "total_of_special_requests":[self.total_of_special_requests],
+                "total_guest":[self.total_guest]
+                }
 
             logging.info("Created hotel data dict")
 
@@ -102,7 +129,7 @@ class HotelClassifier:
 
     def predict(self, dataframe) -> str:
         """
-        This is the method of HotelClassifier
+        This is the method of Hotel Booking Classifier
         Returns: Prediction in string format
         """
         try:
@@ -111,7 +138,7 @@ class HotelClassifier:
                 bucket_name=self.prediction_pipeline_config.model_bucket_name,
                 model_path=self.prediction_pipeline_config.model_file_path,
             )
-            result =  model.predict(dataframe)
+            result = model.predict(dataframe)
             
             return result
         

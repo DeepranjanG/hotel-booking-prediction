@@ -5,56 +5,42 @@ grid_search:
     cv: 3
     verbose: 3
 model_selection:
-  module_0:
-    class: KNeighborsClassifier
-    module: sklearn.neighbors
+  module_1:
+    class: RandomForestClassifier
+    module: sklearn.ensemble
     params:
-      algorithm: kd_tree
-      weights: uniform
-      n_neighbors: 3
+      n_estimators: 100
+      min_samples_spilt: 2
+      max_features: 7
+      max_depth: 5
     search_param_grid:
-      algorithm:
-      - auto
-#      - ball_tree
-#      - kd_tree
-#      - brute
-      weights:
-      - uniform
-      - distance
-      n_neighbors:
-      - 3
-#      - 5
-#      - 9
+      n_estimators :
+      - 100
+      - 200
+      min_samples_split:
+      - 2
+      - 8
+      max_features:
+      - 5
+      - 7
+      max_depth:
+      - 5
+      - 8
 
-#
-#  module_1:
-#    class: RandomForestClassifier
-#    module: sklearn.ensemble
-#    params:
-#      max_depth: 10
-#      max_features: sqrt
-#      n_estimators: 3
-#    search_param_grid:
-#      max_depth:
-#      - 10
-#      - 15
-#      - 20
-#      max_features:
-#      - sqrt
-#      - log2
-#      n_estimators:
-#      - 3
-#      - 5
-#      - 9
 
-  # module_1:
-  #   class: GradientBoostingClassifier
-  #   module: sklearn.ensemble
-  #   search_param_grid:
-  #     loss:
-  #     - deviance
-  #     n_estimators:
-  #     - 100
-  #     criterion:
-  #     - friedman_mse
+
+
+#INPUT_SIZE: 43
+#DENSE_LAYER: 50
+#OUTPUT: 1
+#OPTIMIZER: adam
+#LOSS: binary_crossentropy
+#EPOCHS: 10
+#BATCH_SIZE: 100
+#PATIENCE: 5
+#RESTORE_BEST_WEIGHTS: True
+#VALIDATION_SPLIT: 0.2
+
+
+
     

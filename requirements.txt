@@ -21,6 +21,6 @@ neuro-mf==0.0.5
 Jinja2
 python-multipart
 category-encoders==2.5.1
-
+tensorflow==2.9.0
 
 -e .

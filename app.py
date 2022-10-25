@@ -29,30 +29,48 @@ app.add_middleware(
 class DataForm:
     def __init__(self, request: Request):
         self.request: Request = request
-        self.continent: Optional[str] = None
-        self.education_of_employee: Optional[str] = None
-        self.has_job_experience: Optional[str] = None
-        self.requires_job_training: Optional[str] = None
-        self.no_of_employees: Optional[str] = None
-        self.company_age: Optional[str] = None
-        self.region_of_employment: Optional[str] = None
-        self.prevailing_wage: Optional[str] = None
-        self.unit_of_wage: Optional[str] = None
-        self.full_time_position: Optional[str] = None
+        self.hotel: Optional[str] = None
+        self.lead_time: Optional[str] = None
+        self.arrival_date_year: Optional[str] = None
+        self.arrival_date_month: Optional[str] = None
+        self.arrival_date_day_of_month: Optional[str] = None
+        self.stays_in_weekend_nights: Optional[str] = None
+        self.stays_in_week_nights: Optional[str] = None
+        self.meal: Optional[str] = None
+        self.country: Optional[str] = None
+        self.market_segment: Optional[str] = None
+        self.distribution_channel: Optional[str] = None
+        self.previous_cancellations: Optional[str] = None
+        self.reserved_room_type: Optional[str] = None
+        self.booking_changes: Optional[str] = None
+        self.deposit_type: Optional[str] = None
+        self.customer_type: Optional[str] = None
+        self.adr: Optional[str] = None
+        self.total_of_special_requests: Optional[str] = None
+        self.total_guest: Optional[str] = None
         
 
     async def get_hotel_data(self):
         form = await self.request.form()
-        self.continent = form.get("continent")
-        self.education_of_employee = form.get("education_of_employee")
-        self.has_job_experience = form.get("has_job_experience")
-        self.requires_job_training = form.get("requires_job_training")
-        self.no_of_employees = form.get("no_of_employees")
-        self.company_age = form.get("company_age")
-        self.region_of_employment = form.get("region_of_employment")
-        self.prevailing_wage = form.get("prevailing_wage")
-        self.unit_of_wage = form.get("unit_of_wage")
-        self.full_time_position = form.get("full_time_position")
+        self.hotel = form.get("hotel")
+        self.lead_time = form.get("lead_time")
+        self.arrival_date_year = form.get("arrival_date_year")
+        self.arrival_date_month = form.get("arrival_date_month")
+        self.arrival_date_day_of_month = form.get("arrival_date_day_of_month")
+        self.stays_in_weekend_nights = form.get("stays_in_weekend_nights")
+        self.stays_in_week_nights = form.get("stays_in_week_nights")
+        self.meal = form.get("meal")
+        self.country = form.get("country")
+        self.market_segment = form.get("market_segment")
+        self.distribution_channel = form.get("distribution_channel")
+        self.previous_cancellations = form.get("previous_cancellations")
+        self.reserved_room_type = form.get("reserved_room_type")
+        self.booking_changes = form.get("booking_changes")
+        self.deposit_type = form.get("deposit_type")
+        self.customer_type = form.get("customer_type")
+        self.adr = form.get("adr")
+        self.total_of_special_requests = form.get("total_of_special_requests")
+        self.total_guest = form.get("total_guest")
 
 @app.get("/", tags=["authentication"])
 async def index(request: Request):
@@ -81,16 +99,25 @@ async def predictRouteClient(request: Request):
         await form.get_hotel_data()
         
         hotel_data = HotelData(
-                                continent= form.continent,
-                                education_of_employee = form.education_of_employee,
-                                has_job_experience = form.has_job_experience,
-                                requires_job_training = form.requires_job_training,
-                                no_of_employees= form.no_of_employees,
-                                company_age= form.company_age,
-                                region_of_employment = form.region_of_employment,
-                                prevailing_wage= form.prevailing_wage,
-                                unit_of_wage= form.unit_of_wage,
-                                full_time_position= form.full_time_position,
+                                hotel= form.hotel,
+                                lead_time = form.lead_time,
+                                arrival_date_year = form.arrival_date_year,
+                                arrival_date_month = form.arrival_date_month,
+                                arrival_date_day_of_month= form.arrival_date_day_of_month,
+                                stays_in_weekend_nights= form.stays_in_weekend_nights,
+                                stays_in_week_nights = form.stays_in_week_nights,
+                                meal= form.meal,
+                                country= form.country,
+                                market_segment= form.market_segment,
+                                distribution_channel=form.distribution_channel,
+                                previous_cancellations=form.previous_cancellations,
+                                reserved_room_type=form.reserved_room_type,
+                                booking_changes=form.booking_changes,
+                                deposit_type=form.deposit_type,
+                                customer_type=form.customer_type,
+                                adr=form.adr,
+                                total_of_special_requests=form.total_of_special_requests,
+                                total_guest=form.total_guest,
                                 )
         
         hotel_df = hotel_data.get_hotel_input_data_frame()
@@ -101,9 +128,9 @@ async def predictRouteClient(request: Request):
 
         status = None
         if value == 1:
-            status = "Visa-approved"
+            status = "Confirm"
         else:
-            status = "Visa Not-Approved"
+            status = "Cancelled"
 
         return templates.TemplateResponse(
             "hotel.html",

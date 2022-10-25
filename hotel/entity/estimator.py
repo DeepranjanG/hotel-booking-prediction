@@ -2,9 +2,8 @@ from pandas import DataFrame
 from sklearn.pipeline import Pipeline
 from hotel.exception import HotelException
 from hotel.logger import logging
-import os,sys
+import sys
 
-from dataclasses import dataclass
 class TargetValueMapping:
     def __init__(self):
         self.Certified:int = 0
