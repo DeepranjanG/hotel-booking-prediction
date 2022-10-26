@@ -14,7 +14,6 @@ from hotel.utils.main_utils import load_numpy_array_data, read_yaml_file, load_o
 from hotel.entity.config_entity import ModelTrainerConfig
 from hotel.entity.artifact_entity import DataTransformationArtifact, ModelTrainerArtifact, ClassificationMetricArtifact
 from hotel.entity.estimator import HotelModel
-# from hotel.ml.model import AnnModel
 from hotel.constant.training_pipeline import MODEL_FILE_PATH
 
 class ModelTrainer:

@@ -57,11 +57,11 @@ MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.yaml")
 """
 ANN MODEL TRAINER related constant start with MODEL_TRAINER var name
 """
-ANN_MODEL_TRAINER_DIR_NAME: str = "ann_model_trainer"
-ANN_MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
-ANN_MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.h5"
-ANN_MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
-ANN_MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.yaml")
+# ANN_MODEL_TRAINER_DIR_NAME: str = "ann_model_trainer"
+# ANN_MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
+# ANN_MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.h5"
+# ANN_MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
+# ANN_MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.yaml")
 
 
 """
