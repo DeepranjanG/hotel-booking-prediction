@@ -22,4 +22,5 @@ Jinja2
 python-multipart
 category-encoders==2.5.1
 
+
 -e .
