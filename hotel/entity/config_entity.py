@@ -61,12 +61,12 @@ class ModelTrainerConfig:
     model_config_file_path: str = MODEL_TRAINER_MODEL_CONFIG_FILE_PATH
 
 
-@dataclass
-class AnnModelTrainerConfig:
-    ann_model_trainer_dir: str = os.path.join(training_pipeline_config.artifact_dir, ANN_MODEL_TRAINER_DIR_NAME)
-    ann_trained_model_file_path: str = os.path.join(ann_model_trainer_dir, ANN_MODEL_TRAINER_TRAINED_MODEL_DIR, ANN_MODEL_FILE_NAME)
-    ann_expected_accuracy: float = ANN_MODEL_TRAINER_EXPECTED_SCORE
-    ann_model_config_file_path: str = ANN_MODEL_TRAINER_MODEL_CONFIG_FILE_PATH
+# @dataclass
+# class AnnModelTrainerConfig:
+#     ann_model_trainer_dir: str = os.path.join(training_pipeline_config.artifact_dir, ANN_MODEL_TRAINER_DIR_NAME)
+#     ann_trained_model_file_path: str = os.path.join(ann_model_trainer_dir, ANN_MODEL_TRAINER_TRAINED_MODEL_DIR, ANN_MODEL_FILE_NAME)
+#     ann_expected_accuracy: float = ANN_MODEL_TRAINER_EXPECTED_SCORE
+#     ann_model_config_file_path: str = ANN_MODEL_TRAINER_MODEL_CONFIG_FILE_PATH
 
 @dataclass
 class ModelEvaluationConfig:
