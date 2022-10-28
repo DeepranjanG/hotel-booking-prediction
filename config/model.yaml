@@ -29,18 +29,4 @@ model_selection:
 
 
 
-
-#INPUT_SIZE: 43
-#DENSE_LAYER: 50
-#OUTPUT: 1
-#OPTIMIZER: adam
-#LOSS: binary_crossentropy
-#EPOCHS: 10
-#BATCH_SIZE: 100
-#PATIENCE: 5
-#RESTORE_BEST_WEIGHTS: True
-#VALIDATION_SPLIT: 0.2
-
-
-
     
